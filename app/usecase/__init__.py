@@ -2,7 +2,8 @@ import os
 from dotenv import load_dotenv
 
 
-if not os.getenv("OPENAI_TOKEN"):
+if not os.getenv("GEMINI_TOKEN"):
     load_dotenv()
 
-OPENAI_TOKEN = os.getenv("OPENAI_TOKEN")
+OPENAI_TOKEN = os.getenv("GEMINI_TOKEN")
+GEMINI_AI_URL = os.getenv("GEMINI_AI_URL")

@@ -6,6 +6,7 @@ from app.schemas.appointment import AppointmentViewSchema, ListAppointmentViewSc
 from app.model.appointment import Appointment
 from app.model.medication import Medication
 from app.schemas.filter import AppointmentFilterSchema
+from app.schemas.medication import MedicationSchema
 from sqlalchemy.exc import IntegrityError
 
 class TestAppointmentUseCase:
@@ -113,10 +114,9 @@ class TestAppointmentUseCase:
         )
 
         mock_medications = [
-            {"name": "Paracetamol", "dosage": "500mg", "instructions": "Tomar a cada 6 horas"},
-            {"name": "Ibuprofeno", "dosage": "200mg", "instructions": "Tomar após as refeições"}
+            MedicationSchema(name="Paracetamol", dosage="500mg", instructions="Tomar a cada 6 horas"),
+            MedicationSchema(name="Ibuprofeno", dosage="200mg", instructions="Tomar após as refeições")
         ]
-
         mock_session = session_mock.return_value
         mock_session.add.return_value = None
         mock_session.flush.return_value = None
@@ -167,8 +167,8 @@ class TestAppointmentUseCase:
         )
 
         mock_medications = [
-            {"name": "Paracetamol", "dosage": "500mg", "instructions": "Tomar a cada 6 horas"},
-            {"name": "Ibuprofeno", "dosage": "200mg", "instructions": "Tomar após as refeições"}
+            MedicationSchema(name="Paracetamol", dosage="500mg", instructions="Tomar a cada 6 horas"),
+            MedicationSchema(name="Ibuprofeno", dosage="200mg", instructions="Tomar após as refeições")
         ]
 
         mock_session = session_mock.return_value
@@ -198,8 +198,8 @@ class TestAppointmentUseCase:
         )
 
         mock_medications = [
-            {"name": "Paracetamol", "dosage": "500mg", "instructions": "Tomar a cada 6 horas"},
-            {"name": "Ibuprofeno", "dosage": "200mg", "instructions": "Tomar após as refeições"}
+            MedicationSchema(name="Paracetamol", dosage="500mg", instructions="Tomar a cada 6 horas"),
+            MedicationSchema(name="Ibuprofeno", dosage="200mg", instructions="Tomar após as refeições")
         ]
 
         mock_session = session_mock.return_value
@@ -228,8 +228,8 @@ class TestAppointmentUseCase:
         )
 
         mock_medications = [
-            {"name": "Paracetamol", "dosage": "500mg", "instructions": "Tomar a cada 8 horas"},
-            {"name": "Aspirina", "dosage": "500mg", "instructions": "Tomar com bastante líquido"}
+            MedicationSchema(name="Paracetamol", dosage="500mg", instructions="Tomar a cada 6 horas"),
+            MedicationSchema(name="Ibuprofeno", dosage="200mg", instructions="Tomar após as refeições")
         ]
 
         mock_appointment = MagicMock(spec=Appointment)
@@ -307,8 +307,8 @@ class TestAppointmentUseCase:
         )
 
         mock_medications = [
-            {"name": "Paracetamol", "dosage": "500mg", "instructions": "Tomar a cada 8 horas"},
-            {"name": "Aspirina", "dosage": "500mg", "instructions": "Tomar com bastante líquido"}
+            MedicationSchema(name="Paracetamol", dosage="500mg", instructions="Tomar a cada 6 horas"),
+            MedicationSchema(name="Ibuprofeno", dosage="200mg", instructions="Tomar após as refeições")
         ]
 
         mock_appointment = MagicMock(spec=Appointment)
@@ -338,8 +338,8 @@ class TestAppointmentUseCase:
         )
 
         mock_medications = [
-            {"name": "Paracetamol", "dosage": "500mg", "instructions": "Tomar a cada 8 horas"},
-            {"name": "Aspirina", "dosage": "500mg", "instructions": "Tomar com bastante líquido"}
+            MedicationSchema(name="Paracetamol", dosage="500mg", instructions="Tomar a cada 6 horas"),
+            MedicationSchema(name="Ibuprofeno", dosage="200mg", instructions="Tomar após as refeições")
         ]
 
         mock_appointment = MagicMock(spec=Appointment)

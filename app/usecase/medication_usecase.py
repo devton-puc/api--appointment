@@ -1,44 +1,76 @@
 from app.schemas.status import StatusResponseSchema
+from app.schemas.medication import MedicationSchema
+import json
+from app.usecase import OPENAI_TOKEN, GEMINI_AI_URL
+import requests
+from pydantic import BaseModel
+from typing import List, Dict
+from logger import logger
+import re
+
+class Part(BaseModel):
+    text: str
+
+class Content(BaseModel):
+    parts: List[Part]
+
+class GeminiRequest(BaseModel):
+    contents: List[Content]
+
 
 class MedicationUseCase:
     def generate_medications(self, symptoms: str) -> list[MedicationSchema] | StatusResponseSchema:
         try:
-            mock_medications = {
-                "dor de cabeça": [
-                    {"name": "Paracetamol", "dosage": "500mg", "instructions": "Tomar 1 comprimido a cada 6 horas"},
-                    {"name": "Ibuprofeno", "dosage": "200mg", "instructions": "Tomar 1 comprimido após as refeições"},
-                    {"name": "Dipirona", "dosage": "1g", "instructions": "Tomar 1 cápsula somente em caso de dor"}
-                ],
-                "febre": [
-                    {"name": "Paracetamol", "dosage": "500mg", "instructions": "Tomar 1 comprimido a cada 8 horas"},
-                    {"name": "Aspirina", "dosage": "500mg", "instructions": "Tomar 1 comprimido com bastante líquido"}
-                ],
-                "dor muscular": [
-                    {"name": "Diclofenaco", "dosage": "50mg", "instructions": "Tomar 1 comprimido pela manhã e outro à noite"},
-                    {"name": "Cataflam", "dosage": "50mg", "instructions": "Tomar 1 comprimido após o almoço"},
-                    {"name": "Relaxante muscular", "dosage": "10mg", "instructions": "Tomar 1 comprimido antes de dormir"}
-                ],
-                "gripe": [
-                    {"name": "Antigripal", "dosage": "1 cápsula", "instructions": "Tomar de 8 em 8 horas"},
-                    {"name": "Vitamina C", "dosage": "1g", "instructions": "Tomar 1 comprimido efervescente ao dia"},
-                    {"name": "Descongestionante nasal", "dosage": "1 borrifada", "instructions": "Aplicar em cada narina a cada 8 horas"}
-                ],
-                "tosse": [
-                    {"name": "Xarope de guaco", "dosage": "15ml", "instructions": "Tomar 3 vezes ao dia após as refeições"},
-                    {"name": "Ambroxol", "dosage": "30mg", "instructions": "Tomar 1 comprimido 2 vezes ao dia"},
-                    {"name": "Broncodilatador", "dosage": "1 dose", "instructions": "Usar 1 dose no inalador a cada 12 horas"}
-                ]
-            }
 
-            medications_list = mock_medications.get(
-                symptoms.lower(),
-                [{"name": "Consultar especialista", "dosage": None, "instructions": "Nenhuma recomendação disponível"}]
-            )
+            response = requests.post(f"{GEMINI_AI_URL}?key={OPENAI_TOKEN}", json=self.get_gemini_request(symptoms).model_dump(), headers={"Content-Type": "application/json"})
 
-            return medications_list
+            logger.debug(f"response: {response.json()}")
+
+            return self.extract_response(response)
         except Exception as error:
             return StatusResponseSchema(
                 code=500,
                 message="Erro ao simular medicações.",
                 details=f"{error}"
             )
+
+    def get_gemini_request(self, symptoms: str): 
+        return GeminiRequest(
+            contents=[
+                Content(
+                    parts=[
+                        Part(text="Faça uma indicação de remedios de acordo com o sintoma e idade."),
+                        Part(text="Apenas informe o medicamento, sem a necessidade de qualquer observação."),
+                        Part(text="Para o atributo instruction, informe a quantidade de ml ou comprimidos, horas e quantos dias deverá tomar o medicamento."),
+                        Part(text="Responda em formato JSON na estrutura de lista [name(nome do medicamento), dosage, instructions] que seja possivel fazer parse."),
+                        Part(text="Um médico está monitorando esta resposta. Não se preocupe. Seja objetivo, portanto."),
+                        Part(text=f"Sintomas: {symptoms}"),
+                    ]
+                )
+            ]
+        )
+    
+    def extract_response(self, response)-> list[MedicationSchema] | StatusResponseSchema:
+        try:
+ 
+            response_json = response.json()            
+                       
+            parts_text = response_json["candidates"][0]["content"]["parts"][0]["text"]
+            
+            json_string = re.sub(r"```json\s*|\s*```", "", parts_text).strip()         
+         
+            medication_list = json.loads(json_string)
+            
+            medications = [
+                MedicationSchema(
+                    name=med.get("name"),
+                    dosage=med.get("dosage"),
+                    instructions=med.get("instructions")
+                )
+                for med in medication_list
+            ]
+
+            return medications
+
+        except (KeyError, json.JSONDecodeError) as e:
+            raise Exception(f"{type(e)} Erro ao processar a resposta da IA. Texto de entrada: {parts_text}. Erro: {e}")

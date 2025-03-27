@@ -23,6 +23,27 @@ Este projeto é uma aplicação back-end desenvolvida com Python Utilizando Flas
 - **Pydantic**: Biblioteca para validação de dados e definição de esquemas.
 - **flask-openapi3**: Biblioteca para documentação da API.
 
+
+
+## Criar a Chave do Gemini para usar a api.
+
+Antes de tudo, vamos precisar criar uma Api Key no Google Cloud. Esta
+Api key é necessária para rodar a api que busca a sugestão de remédios
+conforme os sintomas do paciente é informado.
+
+Acesse a url abaixo para criar a chave:
+
+```
+https://aistudio.google.com/apikey
+```
+
+Clique no botão "Criar Chave de Api"
+
+Ao criar, copie a chave criada para ser usada na variavel GEMINI_TOKEN
+onde mostraremos onde inserir, a seguir.
+
+Importante: Não compartilhe essa chave com ninguém:
+
 ## Instalando o projeto
 
 Será necessário ter o python instalado. A versão indicada é a 3.12.6 e a do pip é a 24.2. 
@@ -57,8 +78,9 @@ DB_HOST=localhost
 DB_PORT=3306
 DB_USER=root
 DB_PASSWORD=password
+GEMINI_AI_URL=https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent
+GEMINI_TOKEN=<TOKEN DO GEMINI GERADA>
 ```
-
 ## Rodando a aplicação
 
 Para executar a API  basta executar:
@@ -112,7 +134,8 @@ docker run --name api--appointment \
     -e DB_USER=<USUARIO DE BANCO> \
     -e DB_HOST=<IP DO BANCO> \ 
     -e DB_PORT=<PORTA DO BANCO> \ 
-    -e OPENAI_TOKEN=<TOKEN DO OPENAI>
+    -e GEMINI_AI_URL=<URL DO GEMINI>
+    -e GEMINI_TOKEN=<TOKEN DO GEMINI>
     api--appointment:latest
 ```
 

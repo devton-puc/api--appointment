@@ -1,0 +1,53 @@
+{
+	"info": {
+		"_postman_id": "84ff98eb-62e4-4b85-a618-178f24f3edf6",
+		"name": "gemini-aigenerate-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17710409"
+	},
+	"item": [
+		{
+			"name": "/v1beta/models/gemini-2.0-flash:generateContent?key=<SUA_CHAVE>",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"contents\": [{\r\n    \"parts\":[\r\n        {\"text\": \"Faça uma indicaçao de remedios de acordo com o sintoma e data de nascimento.\"},\r\n        {\"text\": \"Apenas informe o medicamento, sem a necessidade de qualquer observação.\"},\r\n        {\"text\": \"responda em formato json na estrutura [name(nome do medicamento), dosage, instructions] que seja possivel fazer parse.\"},\r\n        {\"text\": \"A data de nascimento é 23/07/1980\"},\r\n        {\"text\": \"dor no estomago, garganta inflamada, nauseas\"}]\r\n    }]\r\n   }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyDOHTz-WwaJlDWODvnzMedP1ZImWSvNA-Y",
+					"protocol": "https",
+					"host": [
+						"generativelanguage",
+						"googleapis",
+						"com"
+					],
+					"path": [
+						"v1beta",
+						"models",
+						"gemini-2.0-flash:generateContent"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "AIzaSyDOHTz-WwaJlDWODvnzMedP1ZImWSvNA-Y"
+						}
+					]
+				},
+				"description": "Generated from cURL: curl \"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyDOHTz-WwaJlDWODvnzMedP1ZImWSvNA-Y\" \\\r\n-H 'Content-Type: application/json' \\\r\n-X POST \\\r\n-d '{\r\n  \"contents\": [{\r\n    \"parts\":[{\"text\": \"Estou com febre. informe os medicamentos\"}]\r\n    }]\r\n   }'"
+			},
+			"response": []
+		}
+	]
+}

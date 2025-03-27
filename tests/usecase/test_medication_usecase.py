@@ -1,31 +1,86 @@
 import pytest
+from unittest.mock import patch, MagicMock
+from app.schemas.status import StatusResponseSchema
+from app.schemas.medication import MedicationSchema
 from app.usecase.medication_usecase import MedicationUseCase
+from app.usecase import GEMINI_AI_URL, OPENAI_TOKEN
 
 class TestMedicationUseCase:
+
+    @pytest.fixture
+    def mock_response(self):
+        return {
+            "candidates": [
+                {
+                    "content": {
+                        "parts": [
+                            {
+                                "text": "```json\n[\n  {\n    \"name\": \"Omeprazol\",\n    \"dosage\": \"20mg\",\n    \"instructions\": \"Tomar 1 cápsula em jejum pela manhã.\"\n  },\n  {\n    \"name\": \"Ibuprofeno\",\n    \"dosage\": \"400mg\",\n    \"instructions\": \"Tomar 1 comprimido a cada 6-8 horas, conforme necessário.\"\n  },\n  {\n    \"name\": \"Dimenidrinato\",\n    \"dosage\": \"50mg\",\n    \"instructions\": \"Tomar 1 comprimido 30 minutos antes das refeições ou viagens.\"\n  }\n]\n```"
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+
+    @pytest.fixture
+    def mock_response_error(self):
+        return {                
+            "candidates": [
+                {
+                    "content": {
+                        "parts": [
+                            {
+                                "text": "Isso não é um JSON válido!"                                
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+
 
     @pytest.fixture
     def medication_usecase(self):
         return MedicationUseCase()
 
-    def test_generate_medications_known_symptoms(self, medication_usecase):
-        symptoms = "dor de cabeça"
-        result = medication_usecase.generate_medications(symptoms)
-        assert result == [
-            {"name": "Paracetamol", "dosage": "500mg", "instructions": "Tomar 1 comprimido a cada 6 horas"},
-            {"name": "Ibuprofeno", "dosage": "200mg", "instructions": "Tomar 1 comprimido após as refeições"},
-            {"name": "Dipirona", "dosage": "1g", "instructions": "Tomar 1 cápsula somente em caso de dor"}
-        ]
+    @patch('app.usecase.medication_usecase.requests.post')
+    def test_should_generate_medications_when_success(self, mock_post, medication_usecase, mock_response):
 
-    def test_generate_medications_unknown_symptoms(self, medication_usecase):
-        symptoms = "sintomas desconhecidos"
-        result = medication_usecase.generate_medications(symptoms)
-        assert result == [
-            {"name": "Consultar especialista", "dosage": None, "instructions": "Nenhuma recomendação disponível"}
-        ]
+        mock_post.return_value.status_code = 200
+        mock_post.return_value.json.return_value = mock_response
+       
+        symptoms = "dor no estomago, garganta inflamada, nauseas"
+        
+        medications = medication_usecase.generate_medications(symptoms)
 
-    def test_generate_medications_empty_input(self, medication_usecase):
-        symptoms = ""
-        result = medication_usecase.generate_medications(symptoms)
-        assert result == [
-            {"name": "Consultar especialista", "dosage": None, "instructions": "Nenhuma recomendação disponível"}
-        ]
+        assert isinstance(medications, list) 
+        assert all(isinstance(med, MedicationSchema) for med in medications) 
+        assert len(medications) == 3  
+        assert medications[0].name == "Omeprazol"  
+        assert medications[1].dosage == "400mg" 
+        assert medications[2].instructions == "Tomar 1 comprimido 30 minutos antes das refeições ou viagens." 
+
+    @patch('app.usecase.medication_usecase.requests.post')
+    def test_should_generate_medications_when_error(self, mock_post, medication_usecase):
+
+        mock_post.side_effect = Exception("Erro ao simular medicações.")
+        
+        symptoms = "dor no estomago, garganta inflamada, nauseas"        
+        response = medication_usecase.generate_medications(symptoms)
+        
+        assert isinstance(response, StatusResponseSchema)  
+        assert response.code == 500  
+        assert "Erro ao simular medicações." in response.message 
+
+
+    @patch('app.usecase.medication_usecase.requests.post')
+    def test_should_generate_medications_when_json_invalid(self, mock_post, medication_usecase, mock_response_error):
+
+        mock_post.return_value.status_code = 200
+        mock_post.return_value.json.return_value = mock_response_error
+
+        symptoms = "dor no estomago, garganta inflamada, nauseas"
+
+        response = medication_usecase.generate_medications(symptoms)
+        assert isinstance(response, StatusResponseSchema)  

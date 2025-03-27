@@ -8,6 +8,8 @@ from app.schemas.status import StatusResponseSchema
 from app.usecase.medication_usecase import MedicationUseCase
 from app.utils.date_utils import parse_date
 from logger import logger
+from typing import List
+from app.schemas.medication import MedicationSchema
 
 class AppointmentUseCase:
 
@@ -39,31 +41,32 @@ class AppointmentUseCase:
         try:
             session = SessionLocal()
 
-            medications = self.medication_usecase.generate_medications(appointment_data.symptoms)
-            if isinstance(medications, StatusResponseSchema):
-                return medications
-
             new_appointment = Appointment(
                 patient_id=appointment_data.patient_id,
                 doctor_crm=appointment_data.doctor_crm,
                 date_time=parse_date(appointment_data.date_time),
                 symptoms=appointment_data.symptoms
             )
+
             session.add(new_appointment)
             session.flush() 
 
+            medications = self.medication_usecase.generate_medications(appointment_data.symptoms)
+
+            if isinstance(medications, StatusResponseSchema):
+                return medications
 
             for medication in medications:
                 new_medication = Medication(
                     appointment_id=new_appointment.id,
-                    name=medication["name"].strip(),
-                    dosage=medication["dosage"],
-                    instructions=medication["instructions"]
+                    name=medication.name,
+                    dosage=medication.dosage,
+                    instructions=medication.instructions
                 )
                 session.add(new_medication)
 
             session.commit()
-            return StatusResponseSchema(code=201, message="Consulta criada com sucesso.")
+            return StatusResponseSchema[List[MedicationSchema]](code=201, message="Consulta criada com sucesso.",result=medications)
         except IntegrityError:
             return StatusResponseSchema(code=500, message="Erro ao criar a consulta", details="Dados informados já existem.")
         except Exception as error:
@@ -94,14 +97,13 @@ class AppointmentUseCase:
                 for medication in medications:
                     new_medication = Medication(
                         appointment_id=appointment.id,
-                        name=medication["name"].strip(),
-                        dosage=medication["dosage"],
-                        instructions=medication["instructions"]
-                    )
+                        name=medication.name,
+                        dosage=medication.dosage,
+                        instructions=medication.instructions                   )
                     session.add(new_medication)
 
             session.commit()
-            return StatusResponseSchema(code=200, message="Consulta alterada com sucesso.")
+            return StatusResponseSchema[List[MedicationSchema]](code=200, message="Consulta alterada com sucesso.",result=medications)
         except IntegrityError:
             return StatusResponseSchema(code=500, message="Erro ao alterar a consulta", details="Dados já existentes.")
         except Exception as error:
