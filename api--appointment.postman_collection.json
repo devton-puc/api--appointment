@@ -18,7 +18,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"patient_id\": 1,\n    \"doctor_crm\": \"123456\",\n    \"date_time\": \"02/02/2000\",\n    \"symptoms\": \"dor de cabeça\"\n}",
+					"raw": "{\n    \"patient_id\": 1,\n    \"doctor_crm\": \"123456\",\n    \"date_time\": \"02/02/2000\",\n    \"symptoms\": \"febra, vomito, dor de garganta. A pessoa tem 20 anos.\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -88,7 +88,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"patient_id\": 1,\n    \"doctor_crm\": \"123456\",\n    \"date_time\": \"02/02/2000\",\n    \"symptoms\": \"febre\"\n}",
+					"raw": "{\n    \"patient_id\": 1,\n    \"doctor_crm\": \"123456\",\n    \"date_time\": \"02/02/2000\",\n    \"symptoms\": \"febre. o paciente tem 20 anos\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"

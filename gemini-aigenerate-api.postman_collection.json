@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "/v1beta/models/gemini-2.0-flash:generateContent?key=<SUA_CHAVE>",
+			"name": "/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyDOHTz-WwaJlDWODvnzMedP1ZImWSvNA-Y",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -18,7 +18,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"contents\": [{\r\n    \"parts\":[\r\n        {\"text\": \"Faça uma indicaçao de remedios de acordo com o sintoma e data de nascimento.\"},\r\n        {\"text\": \"Apenas informe o medicamento, sem a necessidade de qualquer observação.\"},\r\n        {\"text\": \"responda em formato json na estrutura [name(nome do medicamento), dosage, instructions] que seja possivel fazer parse.\"},\r\n        {\"text\": \"A data de nascimento é 23/07/1980\"},\r\n        {\"text\": \"dor no estomago, garganta inflamada, nauseas\"}]\r\n    }]\r\n   }",
+					"raw": "{\r\n  \"contents\": [{\r\n    \"parts\":[\r\n        {\"text\": \"Faça uma indicaçao de remedios de acordo com o sintoma e idade.\"},\r\n        {\"text\": \"Apenas informe o medicamento, sem a necessidade de qualquer observação.\"},\r\n        {\"text\": \"Para o atributo instruction, informe a quantidade de ml ou comprimidos, horas e quantos dias deverá tomar o medicamento.\"},\r\n        {\"text\": \"responda em formato JSON na estrutura de lista [name(nome do medicamento), dosage, instructions] que seja possivel fazer parse.\"},\r\n        {\"text\": \"dor no estomago, garganta inflamada, nauseas. A pessoa tem 20 anos.\"}]\r\n    }]\r\n   }",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -26,7 +26,7 @@
 					}
 				},
 				"url": {
-					"raw": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyDOHTz-WwaJlDWODvnzMedP1ZImWSvNA-Y",
+					"raw": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=<SUA CHAVE>",
 					"protocol": "https",
 					"host": [
 						"generativelanguage",
