@@ -134,8 +134,8 @@ docker run --name api--appointment \
     -e DB_USER=<USUARIO DE BANCO> \
     -e DB_HOST=<IP DO BANCO> \ 
     -e DB_PORT=<PORTA DO BANCO> \ 
-    -e GEMINI_AI_URL=<URL DO GEMINI>
-    -e GEMINI_TOKEN=<TOKEN DO GEMINI>
+    -e GEMINI_AI_URL=<URL DO GEMINI> \
+    -e GEMINI_TOKEN=<TOKEN DO GEMINI> \
     api--appointment:latest
 ```
 
