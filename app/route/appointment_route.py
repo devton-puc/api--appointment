@@ -1,5 +1,5 @@
 from flask import jsonify
-from logger import logger
+from app.logger import logger
 from app.route import appointment_tag
 from app.schemas import AppointmentSaveSchema, AppointmentViewSchema
 from app.schemas.appointment import ListAppointmentViewSchema, IdAppointmentPathSchema

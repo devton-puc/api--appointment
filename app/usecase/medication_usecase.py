@@ -5,7 +5,7 @@ from app.usecase import OPENAI_TOKEN, GEMINI_AI_URL
 import requests
 from pydantic import BaseModel
 from typing import List, Dict
-from logger import logger
+from app.logger import logger
 import re
 
 class Part(BaseModel):

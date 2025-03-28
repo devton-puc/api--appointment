@@ -7,7 +7,7 @@ from app.schemas.filter import AppointmentFilterSchema
 from app.schemas.status import StatusResponseSchema
 from app.usecase.medication_usecase import MedicationUseCase
 from app.utils.date_utils import parse_date
-from logger import logger
+from app.logger import logger
 from typing import List
 from app.schemas.medication import MedicationSchema
 
