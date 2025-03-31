@@ -24,7 +24,6 @@ class AppointmentRoute:
             """Lista as consultas cadastradas filtrando por id do paciente."""
             logger.debug(f"Consultando as consultas: Buscando por [{body.patient_id}]")
             response = self.usecase.list_appointments(body)
-            print(f"response: {response}")
             if isinstance(response, ListAppointmentViewSchema):
                 logger.debug(f"Consultando as consultas [{body.patient_id}]: Dados retornados")
                 return jsonify(response.model_dump()), 200
