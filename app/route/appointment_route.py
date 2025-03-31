@@ -21,7 +21,7 @@ class AppointmentRoute:
                       500: StatusResponseSchema
                   })
         def list_appointments_route(body: AppointmentFilterSchema):
-            """Lista as consultas cadastradas filtrando por sintomas."""
+            """Lista as consultas cadastradas filtrando por id do paciente."""
             logger.debug(f"Consultando as consultas: Buscando por [{body.patient_id}]")
             response = self.usecase.list_appointments(body)
             print(f"response: {response}")
