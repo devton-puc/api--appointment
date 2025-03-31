@@ -22,8 +22,8 @@ class AppointmentUseCase:
             session = SessionLocal()
             query = session.query(Appointment)
 
-            if filter_appointment.symptoms:
-                query = query.filter(Appointment.symptoms.like(f'%{filter_appointment.symptoms}%'))
+            if filter_appointment.patient_id:
+                query = query.filter(Appointment.patient_id == filter_appointment.patient_id)
 
             total = query.count()
             appointments = query.offset((filter_appointment.page - 1) * filter_appointment.per_page).limit(

@@ -19,7 +19,7 @@ class TestAppointmentUseCase:
     @patch("app.usecase.appointment_usecase.SessionLocal")
     def test_should_list_appointments_when_success(self, session_mock, setup_usecase):
  
-        filter_appointment = AppointmentFilterSchema(page=1, per_page=5, symptoms="dor de cabeça")
+        filter_appointment = AppointmentFilterSchema(page=1, per_page=5, patient_id=1)
 
         mock_medication_1 = MagicMock(spec=Medication)
         mock_medication_1.to_view_schema.return_value = {
@@ -76,7 +76,7 @@ class TestAppointmentUseCase:
     @patch("app.usecase.appointment_usecase.SessionLocal")
     def test_should_list_appointments_when_no_results(self, session_mock, setup_usecase):
 
-        filter_appointment = AppointmentFilterSchema(page=1, per_page=5, symptoms="desconhecido")
+        filter_appointment = AppointmentFilterSchema(page=1, per_page=5, patient_id=1)
 
         mock_session = session_mock.return_value
         mock_session.query.return_value.filter.return_value.offset.return_value.limit.return_value.all.return_value = []
@@ -91,7 +91,7 @@ class TestAppointmentUseCase:
     @patch("app.usecase.appointment_usecase.SessionLocal")
     def test_should_list_appointments_when_error(self, session_mock, setup_usecase):
 
-        filter_appointment = AppointmentFilterSchema(page=1, per_page=5, symptoms="erro")
+        filter_appointment = AppointmentFilterSchema(page=1, per_page=5, patient_id=1)
 
         mock_session = session_mock.return_value
         mock_session.query.side_effect = Exception("Erro inesperado no banco de dados")

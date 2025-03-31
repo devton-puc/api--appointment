@@ -41,7 +41,7 @@ class TestAppointmentUseCase:
             filter_data = {
                 "page": 1,
                 "per_page": 5,
-                "name": ""
+                "patient_id": 1
             }
             response = client.post("/appointment/list", json=filter_data)
             assert response.status_code == 200
@@ -52,7 +52,7 @@ class TestAppointmentUseCase:
             filter_data = {
                 "page": 1,
                 "per_page": 5,
-                "name": ""
+                "patient_id": 1
             }
             response = client.post("/appointment/list", json=filter_data)
             assert response.status_code == 204
@@ -62,7 +62,7 @@ class TestAppointmentUseCase:
             filter_data = {
                 "page": 1,
                 "per_page": 5,
-                "name": ""
+                "patient_id": 1
             }
             response = client.post("/appointment/list", json=filter_data)
             assert response.status_code == 500

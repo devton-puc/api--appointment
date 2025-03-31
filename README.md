@@ -11,7 +11,7 @@ Este projeto é uma aplicação back-end desenvolvida com Python Utilizando Flas
 - **Alteração de Consultas médicas**: Permite alterar as informações dos Consultas existentes.
 - **Busca de Consultas médicas**: Permite buscar as informações dos Consultas existentes para edição.
 - **Exclusão de Consultas médicas**: Permite excluir Consultas médicas do banco de dados.
-- **Visualização de Consultas médicas**: Lista todos os Consultas filtrando por sintomas.
+- **Visualização de Consultas médicas**: Lista todos os Consultas filtrando por id do paciente.
 
 
 
