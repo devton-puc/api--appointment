@@ -19,7 +19,7 @@ class GeminiRequest(BaseModel):
 
 
 class MedicationUseCase:
-    def generate_medications(self, symptoms: str) -> list[MedicationSchema] | StatusResponseSchema:
+    def generate_medications(self, symptoms: str) -> StatusResponseSchema:
         try:
 
             response = requests.post(f"{GEMINI_AI_URL}?key={OPENAI_TOKEN}", json=self.get_gemini_request(symptoms).model_dump(), headers={"Content-Type": "application/json"})

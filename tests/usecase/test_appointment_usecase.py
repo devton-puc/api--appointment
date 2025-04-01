@@ -43,7 +43,7 @@ class TestAppointmentUseCase:
         mock_appointment.id = 10
         mock_appointment.patient_id = 1
         mock_appointment.doctor_crm = "123456"
-        mock_appointment.date_time = "20/02/2002"
+        mock_appointment.date_time = "2025-03-30T00:00:00"
         mock_appointment.symptoms = "dor de cabeça"
         mock_appointment.medications = [mock_medication_1, mock_medication_2]
         mock_appointment.to_view_schema.return_value = {
@@ -106,23 +106,23 @@ class TestAppointmentUseCase:
     @patch("app.usecase.appointment_usecase.SessionLocal")
     def test_should_create_appointment_when_success(self, session_mock, setup_usecase):
 
-        appointment_data = AppointmentSaveSchema(
-            patient_id=1,
-            doctor_crm="123456",
-            date_time="02/02/2025",
-            symptoms="dor de cabeça"
-        )
-
         mock_medications = [
             MedicationSchema(name="Paracetamol", dosage="500mg", instructions="Tomar a cada 6 horas"),
             MedicationSchema(name="Ibuprofeno", dosage="200mg", instructions="Tomar após as refeições")
         ]
+
+        appointment_data = AppointmentSaveSchema(
+            patient_id=1,
+            doctor_crm="123456",
+            date_time="2025-03-30T00:00:00",
+            symptoms="dor de cabeça",
+            medications=mock_medications
+        )
+
         mock_session = session_mock.return_value
         mock_session.add.return_value = None
         mock_session.flush.return_value = None
         mock_session.commit.return_value = None
-        setup_usecase.medication_usecase = MagicMock()
-        setup_usecase.medication_usecase.generate_medications.return_value = mock_medications
 
         response = setup_usecase.create_appointment(appointment_data)
 
@@ -134,50 +134,27 @@ class TestAppointmentUseCase:
 
 
     @patch("app.usecase.appointment_usecase.SessionLocal")
-    def test_should_create_appointment_when_invalid_medications(self, session_mock, setup_usecase):
-
-        appointment_data = AppointmentSaveSchema(
-            patient_id=1,
-            doctor_crm="123456",
-            date_time="02/02/2025",
-            symptoms="dor desconhecido"
-        )
-
-        setup_usecase.medication_usecase = MagicMock()
-        setup_usecase.medication_usecase.generate_medications.return_value = StatusResponseSchema(
-            code=400,
-            message="Erro ao gerar medicações"
-        )
-
-        response = setup_usecase.create_appointment(appointment_data)
-
-        assert isinstance(response, StatusResponseSchema)
-        assert response.code == 400
-        assert response.message == "Erro ao gerar medicações"
-
-
-    @patch("app.usecase.appointment_usecase.SessionLocal")
     def test_should_create_appointment_when_integrity_error(self, session_mock, setup_usecase):
-
-        appointment_data = AppointmentSaveSchema(
-            patient_id=1,
-            doctor_crm="123456",
-            date_time="02/02/2025",
-            symptoms="dor de cabeça"
-        )
 
         mock_medications = [
             MedicationSchema(name="Paracetamol", dosage="500mg", instructions="Tomar a cada 6 horas"),
             MedicationSchema(name="Ibuprofeno", dosage="200mg", instructions="Tomar após as refeições")
         ]
 
+        appointment_data = AppointmentSaveSchema(
+            patient_id=1,
+            doctor_crm="123456",
+            date_time="2025-03-30T00:00:00",
+            symptoms="dor de cabeça",
+            medications = mock_medications
+        )
+
+
+
         mock_session = session_mock.return_value
         mock_session.add.return_value = None
         mock_session.flush.return_value = None
         mock_session.commit.side_effect = IntegrityError("Integrity error", None, None)
-
-        setup_usecase.medication_usecase = MagicMock()
-        setup_usecase.medication_usecase.generate_medications.return_value = mock_medications
 
         response = setup_usecase.create_appointment(appointment_data)
 
@@ -190,25 +167,23 @@ class TestAppointmentUseCase:
     @patch("app.usecase.appointment_usecase.SessionLocal")
     def test_should_create_appointment_when_error(self, session_mock, setup_usecase):
 
-        appointment_data = AppointmentSaveSchema(
-            patient_id=1,
-            doctor_crm="123456",
-            date_time="02/02/2025",
-            symptoms="dor de cabeça"
-        )
-
         mock_medications = [
             MedicationSchema(name="Paracetamol", dosage="500mg", instructions="Tomar a cada 6 horas"),
             MedicationSchema(name="Ibuprofeno", dosage="200mg", instructions="Tomar após as refeições")
         ]
 
+        appointment_data = AppointmentSaveSchema(
+            patient_id=1,
+            doctor_crm="123456",
+            date_time="2025-03-30T00:00:00",
+            symptoms="dor de cabeça",
+            medications=mock_medications
+        )
+
         mock_session = session_mock.return_value
         mock_session.add.return_value = None
         mock_session.flush.return_value = None
         mock_session.commit.side_effect = Exception("Erro inesperado")
-
-        setup_usecase.medication_usecase = MagicMock()
-        setup_usecase.medication_usecase.generate_medications.return_value = mock_medications
 
         response = setup_usecase.create_appointment(appointment_data)
 
@@ -220,17 +195,18 @@ class TestAppointmentUseCase:
     @patch("app.usecase.appointment_usecase.SessionLocal")
     def test_should_update_appointment_when_success(self, session_mock, setup_usecase):
 
-        appointment_data = AppointmentSaveSchema(
-            patient_id=2,
-            doctor_crm="654321",
-            date_time="02/02/2025",
-            symptoms="febre"
-        )
-
         mock_medications = [
             MedicationSchema(name="Paracetamol", dosage="500mg", instructions="Tomar a cada 6 horas"),
             MedicationSchema(name="Ibuprofeno", dosage="200mg", instructions="Tomar após as refeições")
         ]
+
+        appointment_data = AppointmentSaveSchema(
+            patient_id=2,
+            doctor_crm="654321",
+            date_time="2025-03-30T00:00:00",
+            symptoms="febre",
+            medications = mock_medications
+        )
 
         mock_appointment = MagicMock(spec=Appointment)
         mock_session = session_mock.return_value
@@ -238,16 +214,12 @@ class TestAppointmentUseCase:
         mock_session.query.return_value.filter.return_value.delete.return_value = None
         mock_session.commit.return_value = None
 
-        setup_usecase.medication_usecase = MagicMock()
-        setup_usecase.medication_usecase.generate_medications.return_value = mock_medications
-
         response = setup_usecase.update_appointment(1, appointment_data)
 
         assert isinstance(response, StatusResponseSchema)
         assert response.code == 200
         assert response.message == "Consulta alterada com sucesso."
 
-        setup_usecase.medication_usecase.generate_medications.assert_called_once_with("febre")
         assert mock_session.query.return_value.filter.return_value.delete.called
         assert mock_session.add.call_count == 2  # Apenas medicações adicionadas
 
@@ -257,7 +229,7 @@ class TestAppointmentUseCase:
         appointment_data = AppointmentSaveSchema(
             patient_id=2,
             doctor_crm="654321",
-            date_time="02/02/2025",
+            date_time="2025-03-30T00:00:00",
             symptoms="febre"
         )
 
@@ -271,54 +243,27 @@ class TestAppointmentUseCase:
         assert response.message == "Consulta não encontrada."
 
     @patch("app.usecase.appointment_usecase.SessionLocal")
-    def test_should_update_appointment_when_invalid_medications(self, session_mock, setup_usecase):
-
-        appointment_data = AppointmentSaveSchema(
-            patient_id=2,
-            doctor_crm="654321",
-            date_time="02/02/2025",
-            symptoms="febre desconhecida"
-        )
-
-        mock_appointment = MagicMock(spec=Appointment)
-        mock_session = session_mock.return_value
-        mock_session.query.return_value.get.return_value = mock_appointment
-
-        setup_usecase.medication_usecase = MagicMock()
-        setup_usecase.medication_usecase.generate_medications.return_value = StatusResponseSchema(
-            code=400,
-            message="Erro ao gerar medicações"
-        )
-
-        response = setup_usecase.update_appointment(1, appointment_data)
-
-        assert isinstance(response, StatusResponseSchema)
-        assert response.code == 400
-        assert response.message == "Erro ao gerar medicações"
-
-    @patch("app.usecase.appointment_usecase.SessionLocal")
     def test_should_update_appointment_when_integrity_error(self, session_mock, setup_usecase):
 
-        appointment_data = AppointmentSaveSchema(
-            patient_id=2,
-            doctor_crm="654321",
-            date_time="02/02/2025",
-            symptoms="febre"
-        )
 
         mock_medications = [
             MedicationSchema(name="Paracetamol", dosage="500mg", instructions="Tomar a cada 6 horas"),
             MedicationSchema(name="Ibuprofeno", dosage="200mg", instructions="Tomar após as refeições")
         ]
 
+        appointment_data = AppointmentSaveSchema(
+            patient_id=2,
+            doctor_crm="654321",
+            date_time="2025-03-30T00:00:00",
+            symptoms="febre",
+            medications=mock_medications
+        )
+
         mock_appointment = MagicMock(spec=Appointment)
         mock_session = session_mock.return_value
         mock_session.query.return_value.get.return_value = mock_appointment
         mock_session.query.return_value.filter.return_value.delete.return_value = None
         mock_session.commit.side_effect = IntegrityError("Integrity error", None, None)
-
-        setup_usecase.medication_usecase = MagicMock()
-        setup_usecase.medication_usecase.generate_medications.return_value = mock_medications
 
         response = setup_usecase.update_appointment(1, appointment_data)
 
@@ -330,26 +275,25 @@ class TestAppointmentUseCase:
     @patch("app.usecase.appointment_usecase.SessionLocal")
     def test_should_update_appointment_when_error(self, session_mock, setup_usecase):
 
-        appointment_data = AppointmentSaveSchema(
-            patient_id=2,
-            doctor_crm="654321",
-            date_time="02/02/2025",
-            symptoms="febre"
-        )
-
         mock_medications = [
             MedicationSchema(name="Paracetamol", dosage="500mg", instructions="Tomar a cada 6 horas"),
             MedicationSchema(name="Ibuprofeno", dosage="200mg", instructions="Tomar após as refeições")
         ]
+
+        appointment_data = AppointmentSaveSchema(
+            patient_id=2,
+            doctor_crm="654321",
+            date_time="2025-03-30T00:00:00",
+            symptoms="febre",
+            medications=mock_medications
+        )
+
 
         mock_appointment = MagicMock(spec=Appointment)
         mock_session = session_mock.return_value
         mock_session.query.return_value.get.return_value = mock_appointment
         mock_session.query.return_value.filter.return_value.delete.return_value = None
         mock_session.commit.side_effect = Exception("Erro inesperado")
-
-        setup_usecase.medication_usecase = MagicMock()
-        setup_usecase.medication_usecase.generate_medications.return_value = mock_medications
 
         response = setup_usecase.update_appointment(1, appointment_data)
 

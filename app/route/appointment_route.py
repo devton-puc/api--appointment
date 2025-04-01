@@ -5,8 +5,8 @@ from app.schemas import AppointmentSaveSchema, AppointmentViewSchema
 from app.schemas.appointment import ListAppointmentViewSchema, IdAppointmentPathSchema
 from app.schemas.filter import AppointmentFilterSchema
 from app.schemas.status import StatusResponseSchema
+from app.schemas.symptoms import SymptomsSchema
 from app.usecase.appointment_usecase import AppointmentUseCase
-
 
 class AppointmentRoute:
 
@@ -50,13 +50,14 @@ class AppointmentRoute:
                     f"Buscando a consulta: status code [{response.code}] - mensagem: [{response.model_dump()}]")
                 return jsonify(response.model_dump()), response.code
 
+
         @app.post('/appointment/create', tags=[appointment_tag],
                   responses={
                       200: StatusResponseSchema,
                       400: StatusResponseSchema,
                       404: StatusResponseSchema,
                       500: StatusResponseSchema
-                  })
+                  }) 
         def create_appointment_route(body: AppointmentSaveSchema):
             """Cria uma nova consulta médica."""
             response = self.usecase.create_appointment(body)

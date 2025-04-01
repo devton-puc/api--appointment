@@ -5,16 +5,12 @@ from app.model.medication import Medication
 from app.schemas.appointment import AppointmentSaveSchema, ListAppointmentViewSchema, AppointmentViewSchema
 from app.schemas.filter import AppointmentFilterSchema
 from app.schemas.status import StatusResponseSchema
-from app.usecase.medication_usecase import MedicationUseCase
 from app.utils.date_utils import parse_date
 from app.logs.logger import logger
 from typing import List
 from app.schemas.medication import MedicationSchema
 
 class AppointmentUseCase:
-
-    def __init__(self):
-        self.medication_usecase = MedicationUseCase()
 
     def list_appointments(self, filter_appointment: AppointmentFilterSchema) -> ListAppointmentViewSchema | StatusResponseSchema:
         try:
@@ -51,12 +47,7 @@ class AppointmentUseCase:
             session.add(new_appointment)
             session.flush() 
 
-            medications = self.medication_usecase.generate_medications(appointment_data.symptoms)
-
-            if isinstance(medications, StatusResponseSchema):
-                return medications
-
-            for medication in medications:
+            for medication in appointment_data.medications:
                 new_medication = Medication(
                     appointment_id=new_appointment.id,
                     name=medication.name,
@@ -66,7 +57,7 @@ class AppointmentUseCase:
                 session.add(new_medication)
 
             session.commit()
-            return StatusResponseSchema[List[MedicationSchema]](code=201, message="Consulta criada com sucesso.",result=medications)
+            return StatusResponseSchema[List[MedicationSchema]](code=201, message="Consulta criada com sucesso.")
         except IntegrityError:
             return StatusResponseSchema(code=500, message="Erro ao criar a consulta", details="Dados informados já existem.")
         except Exception as error:
@@ -88,22 +79,18 @@ class AppointmentUseCase:
             if appointment_data.symptoms:
                 appointment.symptoms = appointment_data.symptoms
 
-                medications = self.medication_usecase.generate_medications(appointment_data.symptoms)
-                if isinstance(medications, StatusResponseSchema):
-                    return medications
+            session.query(Medication).filter(Medication.appointment_id == id).delete()
 
-                session.query(Medication).filter(Medication.appointment_id == id).delete()
-
-                for medication in medications:
-                    new_medication = Medication(
-                        appointment_id=appointment.id,
-                        name=medication.name,
-                        dosage=medication.dosage,
-                        instructions=medication.instructions                   )
-                    session.add(new_medication)
+            for medication in appointment_data.medications:
+                new_medication = Medication(
+                    appointment_id=appointment.id,
+                    name=medication.name,
+                    dosage=medication.dosage,
+                    instructions=medication.instructions                   )
+                session.add(new_medication)
 
             session.commit()
-            return StatusResponseSchema[List[MedicationSchema]](code=200, message="Consulta alterada com sucesso.",result=medications)
+            return StatusResponseSchema[List[MedicationSchema]](code=200, message="Consulta alterada com sucesso.")
         except IntegrityError:
             return StatusResponseSchema(code=500, message="Erro ao alterar a consulta", details="Dados já existentes.")
         except Exception as error:

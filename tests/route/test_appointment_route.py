@@ -34,7 +34,7 @@ def client():
         with app.test_client() as client:
             yield client
 
-class TestAppointmentUseCase:
+class TestAppointmentRoute:
 
     def test_should_return_http200_list_appointments_when_success(self, client):
         with patch("app.usecase.appointment_usecase.AppointmentUseCase.list_appointments", mock_list_appointments_success()):
@@ -88,8 +88,15 @@ class TestAppointmentUseCase:
             new_appointment = {
 				"patient_id": 1,
 				"doctor_crm": "123456",
-				"date_time": "02/02/2000",
-				"symptoms": "dor de cabeça"
+				"date_time": "2025-03-30T00:00:00",
+				"symptoms": "dor de cabeça",
+                "medications": [
+                        {
+                            "dosage": "750mg",
+                            "instructions": "1 comprimido, a cada 6 horas, por 3 dias.",
+                            "name": "Paracetamol"
+                        }
+                ]
 			}
             response = client.post("/appointment/create", json=new_appointment)
             assert response.status_code == 201
@@ -99,8 +106,15 @@ class TestAppointmentUseCase:
             new_appointment = {
 				"patient_id": 1,
 				"doctor_crm": "123456",
-				"date_time": "02/02/2000",
-				"symptoms": "dor de cabeça"
+				"date_time": "2025-03-30T00:00:00",
+				"symptoms": "dor de cabeça",
+                "medications": [
+                        {
+                            "dosage": "750mg",
+                            "instructions": "1 comprimido, a cada 6 horas, por 3 dias.",
+                            "name": "Paracetamol"
+                        }
+                ]
 			}
             response = client.post("/appointment/create", json=new_appointment)
             assert response.status_code == 500
@@ -110,8 +124,15 @@ class TestAppointmentUseCase:
             updated_appointment = {
 				"patient_id": 1,
 				"doctor_crm": "123456",
-				"date_time": "02/02/2000",
-				"symptoms": "dor de cabeça"
+				"date_time": "2025-03-30T00:00:00",
+				"symptoms": "dor de cabeça",
+                "medications": [
+                        {
+                            "dosage": "750mg",
+                            "instructions": "1 comprimido, a cada 6 horas, por 3 dias.",
+                            "name": "Paracetamol"
+                        }
+                ]
 			}
             response = client.put("/appointment/999", json=updated_appointment)
             assert response.status_code == 404
@@ -121,8 +142,15 @@ class TestAppointmentUseCase:
             updated_appointment = {
 				"patient_id": 1,
 				"doctor_crm": "123456",
-				"date_time": "02/02/2000",
-				"symptoms": "dor de cabeça"
+				"date_time": "2025-03-30T00:00:00",
+				"symptoms": "dor de cabeça",
+                "medications": [
+                        {
+                            "dosage": "750mg",
+                            "instructions": "1 comprimido, a cada 6 horas, por 3 dias.",
+                            "name": "Paracetamol"
+                        }
+                ]
 			}
             response = client.put("/appointment/1", json=updated_appointment)
             assert response.status_code == 500
