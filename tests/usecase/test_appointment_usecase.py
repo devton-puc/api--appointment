@@ -114,7 +114,7 @@ class TestAppointmentUseCase:
         appointment_data = AppointmentSaveSchema(
             patient_id=1,
             doctor_crm="123456",
-            date_time="2025-03-30T00:00:00",
+            date_time="2025-03-30T00:00",
             symptoms="dor de cabeça",
             medications=mock_medications
         )
@@ -144,7 +144,7 @@ class TestAppointmentUseCase:
         appointment_data = AppointmentSaveSchema(
             patient_id=1,
             doctor_crm="123456",
-            date_time="2025-03-30T00:00:00",
+            date_time="2025-03-30T00:00",
             symptoms="dor de cabeça",
             medications = mock_medications
         )
@@ -175,7 +175,7 @@ class TestAppointmentUseCase:
         appointment_data = AppointmentSaveSchema(
             patient_id=1,
             doctor_crm="123456",
-            date_time="2025-03-30T00:00:00",
+            date_time="2025-03-30T00:00",
             symptoms="dor de cabeça",
             medications=mock_medications
         )
@@ -203,7 +203,7 @@ class TestAppointmentUseCase:
         appointment_data = AppointmentSaveSchema(
             patient_id=2,
             doctor_crm="654321",
-            date_time="2025-03-30T00:00:00",
+            date_time="2025-03-30T00:00",
             symptoms="febre",
             medications = mock_medications
         )
@@ -229,7 +229,7 @@ class TestAppointmentUseCase:
         appointment_data = AppointmentSaveSchema(
             patient_id=2,
             doctor_crm="654321",
-            date_time="2025-03-30T00:00:00",
+            date_time="2025-03-30T00:00",
             symptoms="febre"
         )
 
@@ -254,7 +254,7 @@ class TestAppointmentUseCase:
         appointment_data = AppointmentSaveSchema(
             patient_id=2,
             doctor_crm="654321",
-            date_time="2025-03-30T00:00:00",
+            date_time="2025-03-30T00:00",
             symptoms="febre",
             medications=mock_medications
         )
@@ -283,7 +283,7 @@ class TestAppointmentUseCase:
         appointment_data = AppointmentSaveSchema(
             patient_id=2,
             doctor_crm="654321",
-            date_time="2025-03-30T00:00:00",
+            date_time="2025-03-30T00:00",
             symptoms="febre",
             medications=mock_medications
         )

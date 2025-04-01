@@ -14,7 +14,7 @@ def mock_list_appointments_success():
                 id=1,
                 patient_id=101,
                 doctor_crm="CRM12345",
-                date_time="2025-04-01T12:00:00",
+                date_time="2025-04-01T12:00",
                 symptoms="febre",
                 medications=[]
             ),
@@ -22,7 +22,7 @@ def mock_list_appointments_success():
                 id=2,
                 patient_id=102,
                 doctor_crm="CRM54321",
-                date_time="2025-04-02T15:00:00",
+                date_time="2025-04-02T15:00",
                 symptoms="dor de cabeça",
                 medications=[]
             )
@@ -54,7 +54,7 @@ def mock_get_appointment_success():
         id=1,
         patient_id=101,
         doctor_crm="CRM12345",
-        date_time="02/02/2020",
+        date_time="2025-04-02T15:00",
         symptoms="febre",
         medications=[
             MedicationSchema(
