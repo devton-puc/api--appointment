@@ -13,6 +13,8 @@ Este projeto é uma aplicação back-end desenvolvida com Python Utilizando Flas
 - **Exclusão de Consultas médicas**: Permite excluir Consultas médicas do banco de dados.
 - **Visualização de Consultas médicas**: Lista todos os Consultas filtrando por id do paciente.
 
+- **Gerar medicamentos por sintomas**: Gera uma lista de medicamentos conforme descritos os sintomas apresentados.
+
 
 
 ## Tecnologias Utilizadas
