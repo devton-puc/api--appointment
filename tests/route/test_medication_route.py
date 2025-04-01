@@ -15,12 +15,11 @@ from tests.mock.medication_mock import (
 
 @pytest.fixture
 def client():
-    """Mocka a sessão do banco e retorna um cliente de teste do Flask"""
-    with patch("app.model.SessionLocal", MagicMock()):
-        app.testing = True
-        with app.test_client() as client:
-            yield client
+    app.testing = True
+    with app.test_client() as client:
+        yield client
 
+        
 class TestMedicationRoute:
 
     def test_should_return_http200_generate_medications_when_success(self, client):
