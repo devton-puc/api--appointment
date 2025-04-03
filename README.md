@@ -172,6 +172,8 @@ Para executar, importe as collections do postman
 
 ```
 api--appointment.postman_collection.json
+
+gemini-aigenerate-api.postman_collection.json
 ```
 
 ## Autor
