@@ -20,7 +20,8 @@ Este projeto é uma aplicação back-end desenvolvida com Python Utilizando Flas
 
 4. **Integração com Serviço Externo**:
    - A API `api--appointment` conecta-se à `API do Google Gemini`, que retorna os medicamentos recomendados com base nos sintomas.
-   
+
+![Modelo de Arquitetura](files/medical-consulting-arquitetura.png)
 
 ## Funcionalidades
 
