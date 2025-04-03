@@ -8,8 +8,8 @@ class Medication(Base):
 
     id = Column(Integer, primary_key=True)
     appointment_id = Column(Integer, ForeignKey('appointment.id'), nullable=False)
-    name = Column(String(100), nullable=False)  
-    dosage = Column(String(50), nullable=True) 
+    name = Column(String(200), nullable=False)  
+    dosage = Column(String(400), nullable=True) 
     instructions = Column(Text, nullable=True) 
     appointment = relationship(
         "Appointment",
